@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="SiteDBModelStoreContainer" CdmEntityContainer="SiteDBEntities">
+    <EntitySetMapping Name="Pages">
+      <EntityTypeMapping TypeName="SiteDBModel.Page">
+        <MappingFragment StoreEntitySet="Pages">
+          <ScalarProperty Name="Uri" ColumnName="Uri" />
+          <ScalarProperty Name="ResponceTimeMin" ColumnName="ResponceTimeMin" />
+          <ScalarProperty Name="ResponceTimeMax" ColumnName="ResponceTimeMax" />
+          <ScalarProperty Name="Site_Uri" ColumnName="Site_Uri" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Sites">
+      <EntityTypeMapping TypeName="SiteDBModel.Site">
+        <MappingFragment StoreEntitySet="Sites">
+          <ScalarProperty Name="Uri" ColumnName="Uri" />
+          <ScalarProperty Name="AverageResponseTime" ColumnName="AverageResponseTime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

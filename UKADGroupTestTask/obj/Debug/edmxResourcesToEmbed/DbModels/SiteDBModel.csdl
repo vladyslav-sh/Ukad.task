@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="SiteDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Page">
+    <Key>
+      <PropertyRef Name="Uri" />
+    </Key>
+    <Property Name="Uri" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ResponceTimeMin" Type="Double" Nullable="false" />
+    <Property Name="ResponceTimeMax" Type="Double" Nullable="false" />
+    <Property Name="Site_Uri" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Site" Relationship="Self.FK_dbo_Pages_dbo_Sites_Site_Uri" FromRole="Pages" ToRole="Sites" />
+  </EntityType>
+  <EntityType Name="Site">
+    <Key>
+      <PropertyRef Name="Uri" />
+    </Key>
+    <Property Name="Uri" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="AverageResponseTime" Type="Double" Nullable="false" />
+    <NavigationProperty Name="Pages" Relationship="Self.FK_dbo_Pages_dbo_Sites_Site_Uri" FromRole="Sites" ToRole="Pages" />
+  </EntityType>
+  <Association Name="FK_dbo_Pages_dbo_Sites_Site_Uri">
+    <End Role="Sites" Type="Self.Site" Multiplicity="0..1" />
+    <End Role="Pages" Type="Self.Page" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Sites">
+        <PropertyRef Name="Uri" />
+      </Principal>
+      <Dependent Role="Pages">
+        <PropertyRef Name="Site_Uri" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="SiteDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Pages" EntityType="Self.Page" />
+    <EntitySet Name="Sites" EntityType="Self.Site" />
+    <AssociationSet Name="FK_dbo_Pages_dbo_Sites_Site_Uri" Association="Self.FK_dbo_Pages_dbo_Sites_Site_Uri">
+      <End Role="Sites" EntitySet="Sites" />
+      <End Role="Pages" EntitySet="Pages" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

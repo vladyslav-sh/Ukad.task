@@ -1,0 +1,121 @@
+﻿@model UKADGroupTestTask.DbModels.Site
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UKAD-Group Test Task</title>
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/Content/loading.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.2.1.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+    <div class="container">
+        <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center" style="height:20%">
+            <h1 class="header page-header ">UGTT tool for testing site perfomance</h1>
+        </div>
+   
+        <div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="jumbotron ">
+                    <p>
+                        UGTT Team present you a simple tool for testing and evaluating site's performance.
+                        All you need is provide yours site's domain name and wait until we finish collecting and processing data.
+                    </p>
+                    <p>Check this out:  </p>
+
+                    @using (Ajax.BeginForm("ProcessUri", "Home", null, new AjaxOptions
+                    {
+                        OnSuccess = "OnSuccess",
+                        LoadingElementId = "loading",
+                        UpdateTargetId = "results",
+                        OnBegin = "OnBegin",
+                        OnFailure = "OnFailure"
+                    }, new { id = "uriForm", name = "uriForm" }))
+                    {
+                        <div class="input-group">
+                            <input class="input col-lg-9 col-md-9 col-sm-9 col-xs-9" id="uriInput" type="text" placeholder="http://example.com" name="requestedUri" />
+                            <input class="btn btn-submit col-lg-3 col-md-3 col-sm-3 col-xs-3" type="submit" value="Start test" />
+                        </div>
+                        <label for="uriInput" class="error text-warning"></label>
+                    }
+                    <br />
+                    <div id="loading" class="row" name="loading" style="display:none">
+
+                        <ul class="bokeh">
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                        </ul>
+                        <span class="text-success">We working on your's site... Please be patient.</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="">
+            <div id="results" style="margin-top:auto"></div>
+
+        </div>
+    </div>
+
+
+    <script>
+        $(function () {
+
+            $.validator.addMethod('domainURI', function (value, element) {
+                return this.optional(element) || /^(http(s?)\:\/\/)[a-zA-Z0-9\-\.]{3,}(\/)?$/.test(value);
+            });
+
+            var form = $("#uriForm");
+            $("#uriForm").validate({
+                rules: {
+                    requestedUri: {
+                        required: true,
+                        url: true,
+                        domainURI: true
+                    }
+                },
+                messages: {
+                    requestedUri: {
+                        required: "We can't work with empty field.",
+                        url: "This is not valid URL. Are you sure that it is correct?",
+                        domainURI: "Only domain URL, please. No further path needed."
+                    }
+                }
+                });
+    });
+
+    var result;
+
+    function OnSuccess(data) {
+        result = data;
+        location.href = "#results";
+    }
+
+    function OnBegin() {
+        $('#results').empty();
+        barChart = null;
+    }
+
+    function OnFailure(request, error) {
+        $("#results").html(request.responceText);
+    }
+
+    </script>
+
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+</body>
+</html>

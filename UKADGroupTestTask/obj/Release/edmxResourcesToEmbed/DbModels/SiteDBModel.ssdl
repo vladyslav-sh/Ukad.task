@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="SiteDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Pages">
+    <Key>
+      <PropertyRef Name="Uri" />
+    </Key>
+    <Property Name="Uri" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="ResponceTimeMin" Type="float" Nullable="false" />
+    <Property Name="ResponceTimeMax" Type="float" Nullable="false" />
+    <Property Name="Site_Uri" Type="nvarchar" MaxLength="128" />
+  </EntityType>
+  <EntityType Name="Sites">
+    <Key>
+      <PropertyRef Name="Uri" />
+    </Key>
+    <Property Name="Uri" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="AverageResponseTime" Type="float" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_dbo_Pages_dbo_Sites_Site_Uri">
+    <End Role="Sites" Type="Self.Sites" Multiplicity="0..1" />
+    <End Role="Pages" Type="Self.Pages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Sites">
+        <PropertyRef Name="Uri" />
+      </Principal>
+      <Dependent Role="Pages">
+        <PropertyRef Name="Site_Uri" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="SiteDBModelStoreContainer">
+    <EntitySet Name="Pages" EntityType="Self.Pages" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Sites" EntityType="Self.Sites" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_dbo_Pages_dbo_Sites_Site_Uri" Association="Self.FK_dbo_Pages_dbo_Sites_Site_Uri">
+      <End Role="Sites" EntitySet="Sites" />
+      <End Role="Pages" EntitySet="Pages" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

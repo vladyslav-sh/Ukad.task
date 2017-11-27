@@ -1,0 +1,113 @@
+﻿@model UKADGroupTestTask.Models.ResultsModel
+<script src="~/Scripts/Chart.min.js"></script>
+
+
+
+<div class="row text-center" style="margin-top:50px;margin-bottom:50px;">
+
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <img src="~/Content/Images/active-search-3-128.png" />
+        <p> @Model.Pages.Count URLs found</p>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <img src="~/Content/Images/page-speed-128.png" />
+        <p>@Model.AverageResponceTime ms average responce time</p>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <img src="~/Content/Images/page-quality-128.png" />
+        <p>Better then @Model.EvaluatedResult% of tested sites</p>
+    </div>
+
+</div> 
+<div>
+
+    <div style="margin-top:50px;margin-bottom:50px;">
+        <canvas id="chartCanvas" style="position: relative; align-self:auto;resize:vertical;"  ></canvas>
+    </div>
+
+    <div>
+        <table class="table table-striped table-bordered table-condensed">
+            <tr class="text-center">
+                <th>URLs</th>
+                <th>Max ms</th>
+                <th>Min ms</th>
+            </tr>
+            @foreach (var page in Model.Pages)
+            {
+                <tr>
+                    <td>@page.Uri</td>
+                    <td>@page.RTMax</td>
+                    <td>@page.RTMin</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+<script>
+    var canvas = $("#chartCanvas");
+
+    console.log(Chart.defaults);
+
+    Chart.defaults.global.animation.duration = 1500;
+
+    var barChart = new Chart(canvas, {
+        type: 'horizontalBar',
+        data: {
+            labels: [@Html.Raw(ViewBag.ChartLabels)],
+            datasets: [{
+                label: 'Maximal reslonce time',
+                backgroundColor: '#E74C3C',
+                    data: [@ViewBag.ChartMaxValues],
+            },{
+                label: 'Minimal reslonce time',
+                backgroundColor: '#00bc8c',
+                data: [@ViewBag.ChartMinValues],
+            }]
+        },
+        options: {
+            legend: {
+                labels: {
+                    fontColor: 'white' //set your desired color
+                }
+            },
+            scales: {
+                yAxes: [{
+                    gridLines: {
+                        display: true,
+                        color: "#FFFFFF"
+                    },
+                    ticks: {
+                        fontColor: "white",
+                        beginAtZero: true,
+                    },
+                    scaleLabel: {
+                        display: true,
+                        fontColor: "white",
+                        labelString: 'URLs'
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        fontColor: "white",
+                        beginAtZero: true
+                    },
+                    gridLines: {
+                        display: true,
+                        color: "#FFFFFF"
+                    },
+                    scaleLabel: {
+                        display: true,
+                        fontColor: "white",
+                        labelString: 'Milliseconds'
+                    }
+                }]
+            }
+        }
+    })
+
+</script>
+
+

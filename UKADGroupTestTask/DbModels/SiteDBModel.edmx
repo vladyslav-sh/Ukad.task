@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="SiteDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Pages">
+          <Key>
+            <PropertyRef Name="Uri" />
+          </Key>
+          <Property Name="Uri" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ResponceTimeMin" Type="float" Nullable="false" />
+          <Property Name="ResponceTimeMax" Type="float" Nullable="false" />
+          <Property Name="Site_Uri" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="Sites">
+          <Key>
+            <PropertyRef Name="Uri" />
+          </Key>
+          <Property Name="Uri" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="AverageResponseTime" Type="float" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_dbo_Pages_dbo_Sites_Site_Uri">
+          <End Role="Sites" Type="Self.Sites" Multiplicity="0..1" />
+          <End Role="Pages" Type="Self.Pages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sites">
+              <PropertyRef Name="Uri" />
+            </Principal>
+            <Dependent Role="Pages">
+              <PropertyRef Name="Site_Uri" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SiteDBModelStoreContainer">
+          <EntitySet Name="Pages" EntityType="Self.Pages" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sites" EntityType="Self.Sites" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_dbo_Pages_dbo_Sites_Site_Uri" Association="Self.FK_dbo_Pages_dbo_Sites_Site_Uri">
+            <End Role="Sites" EntitySet="Sites" />
+            <End Role="Pages" EntitySet="Pages" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SiteDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Page">
+          <Key>
+            <PropertyRef Name="Uri" />
+          </Key>
+          <Property Name="Uri" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ResponceTimeMin" Type="Double" Nullable="false" />
+          <Property Name="ResponceTimeMax" Type="Double" Nullable="false" />
+          <Property Name="Site_Uri" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Site" Relationship="Self.FK_dbo_Pages_dbo_Sites_Site_Uri" FromRole="Pages" ToRole="Sites" />
+        </EntityType>
+        <EntityType Name="Site">
+          <Key>
+            <PropertyRef Name="Uri" />
+          </Key>
+          <Property Name="Uri" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AverageResponseTime" Type="Double" Nullable="false" />
+          <NavigationProperty Name="Pages" Relationship="Self.FK_dbo_Pages_dbo_Sites_Site_Uri" FromRole="Sites" ToRole="Pages" />
+        </EntityType>
+        <Association Name="FK_dbo_Pages_dbo_Sites_Site_Uri">
+          <End Role="Sites" Type="Self.Site" Multiplicity="0..1" />
+          <End Role="Pages" Type="Self.Page" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sites">
+              <PropertyRef Name="Uri" />
+            </Principal>
+            <Dependent Role="Pages">
+              <PropertyRef Name="Site_Uri" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SiteDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Pages" EntityType="Self.Page" />
+          <EntitySet Name="Sites" EntityType="Self.Site" />
+          <AssociationSet Name="FK_dbo_Pages_dbo_Sites_Site_Uri" Association="Self.FK_dbo_Pages_dbo_Sites_Site_Uri">
+            <End Role="Sites" EntitySet="Sites" />
+            <End Role="Pages" EntitySet="Pages" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SiteDBModelStoreContainer" CdmEntityContainer="SiteDBEntities">
+          <EntitySetMapping Name="Pages">
+            <EntityTypeMapping TypeName="SiteDBModel.Page">
+              <MappingFragment StoreEntitySet="Pages">
+                <ScalarProperty Name="Uri" ColumnName="Uri" />
+                <ScalarProperty Name="ResponceTimeMin" ColumnName="ResponceTimeMin" />
+                <ScalarProperty Name="ResponceTimeMax" ColumnName="ResponceTimeMax" />
+                <ScalarProperty Name="Site_Uri" ColumnName="Site_Uri" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sites">
+            <EntityTypeMapping TypeName="SiteDBModel.Site">
+              <MappingFragment StoreEntitySet="Sites">
+                <ScalarProperty Name="Uri" ColumnName="Uri" />
+                <ScalarProperty Name="AverageResponseTime" ColumnName="AverageResponseTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
